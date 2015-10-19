@@ -30,7 +30,8 @@ var_dump($a);
 
 ### Métodos
 
-##### API->getMetrics
+* API : getMetrics
+
 Retorna o total da base de leads
 
 ### Atualização regular
