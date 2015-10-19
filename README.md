@@ -32,11 +32,10 @@ var_dump($a);
 
 * API : getMetrics
 
-Retorna o total da base de leads
+  Retorna o total da base de leads
 
-### Atualização regular
+### Atualização regular.
 
 @Release 1.0
 
 Nota da versão: API Experimental
-
