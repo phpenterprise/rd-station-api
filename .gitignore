@@ -19,3 +19,13 @@ temp/
 demos/
 extras/documentation
 /nbproject/private/
+
+# NetBeans 
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
