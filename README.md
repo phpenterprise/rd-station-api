@@ -14,10 +14,10 @@ API de integração simplificada com a plataforma RD Station
 // include lib
 require '../source/rdapi.class.php';
 
-// set email and pass (your RD Station user)
+// authentication (set your RD Station user)
 $api = New \RdStation\Api('{user@example.com}','{pass}');
 
-// call method for get lead totals 
+// call method (for get leads totals) 
 $a = $api->getMetrics();
         
 // debug
