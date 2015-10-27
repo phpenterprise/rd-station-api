@@ -1,0 +1,17 @@
+{
+    "name": "phpenterprise-dev/rd-station-api",
+    "description": "RD Station API for Metrics",
+    "type": "php-library",
+    "require": {
+        "lib-curl": "^7.36",
+        "lib-openssl": "1.0.1.7"
+    },
+    "license": "GPL2.0",
+    "authors": [
+        {
+            "name": "Patrick Otto",
+            "email": "patrick@phpenterprise.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}

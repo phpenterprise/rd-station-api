@@ -11,7 +11,7 @@
 require '../source/rdapi.class.php';
 
 // set email and pass
-$api = New \RdStation\Api('{user@example.com}','{pass}');
+$api = New \RdStation\Api('{user@example}','{pass}');
 
 // call method for get lead totals 
 $a = $api->getMetrics();
