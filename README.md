@@ -8,7 +8,7 @@ API de integração simplificada com a plataforma RD Station
 * Apache 2.2+
 
 
-### Via composer
+### Chamada via composer
 
     composer require phpenterprise-dev/rd-station-api
 
