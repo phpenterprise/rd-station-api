@@ -12,7 +12,7 @@ API de integração simplificada com a plataforma RD Station
 ~~~.php
 
 // include lib
-require '../source/rdapi.class.php';
+require '../src/rdstation/api.php';
 
 // authentication (set your RD Station user)
 $api = New \RdStation\Api('{user@example.com}','{pass}');
