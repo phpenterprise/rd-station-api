@@ -7,6 +7,11 @@ API de integração simplificada com a plataforma RD Station
 * Extensões do PHP "php_curl" e "php_openssl"
 * Apache 2.2+
 
+
+### Composer
+
+    composer require phpenterprise-dev/rd-station-api
+
 ### Exemplo de uso
 
 ~~~.php
