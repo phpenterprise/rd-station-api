@@ -8,14 +8,14 @@
  * 
  */
 
-require '../source/rdapi.class.php';
+require '../src/rdstation/api.php';
 
 // set email and pass
-$api = New \RdStation\Api('{user@example}','{pass}');
+$api = New \RdStation\Api('{user@example}', '{pass}');
 
 // call method for get lead totals 
 $a = $api->getMetrics();
-        
+
 // debug
 var_dump($a);
 
