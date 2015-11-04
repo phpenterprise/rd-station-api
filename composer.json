@@ -15,8 +15,8 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": {
-            "rdstation": "src/RdStation"
+        "psr-4": {
+            "RdStation": ["src/RdStation", "Api.php"]
         }
     }
 }
