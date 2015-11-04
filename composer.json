@@ -1,8 +1,8 @@
 {
     "name": "phpenterprise-dev/rd-station-api",
     "description": "RD Station API for Metrics",
-    "type": "php-library",
     "require": {
+        "php": ">=5.3.0",
         "lib-curl": "^7.36",
         "lib-openssl": "1.0.1.7"
     },
@@ -13,5 +13,10 @@
             "email": "patrick@phpenterprise.com"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "rdstation": "src/"
+        }
+    }
 }
