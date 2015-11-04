@@ -31,7 +31,7 @@ class Api {
         $this->pass = $pass;
 
         // set tmp storage
-        $this->_cookie_path = __DIR__ . '/../tmp/';
+        $this->_cookie_path = __DIR__ . '/../../tmp/';
 
         // start login
         return $this->auth();
@@ -167,7 +167,7 @@ class Api {
         if ($latest_filename) {
             $this->_cookie = $latest_filename;
         }
-        
+
         // force re-login on loggout
         if (!empty($_SESSION['_CURL']) && !$this->curl && $latest_filename) {
             $this->curl = $_SESSION['_CURL'];
