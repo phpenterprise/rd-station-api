@@ -15,6 +15,8 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-        "classmap": ["src/RdStation", "Api.php"]
+        "psr-0": {
+            "RdStation": "src/"
+        }
     }
 }
