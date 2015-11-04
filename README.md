@@ -10,7 +10,7 @@ API de integração simplificada com a plataforma RD Station
 
 ### Download via composer   
 
-    composer require phpenterprise-dev/rd-station-api
+    composer require phpenterprise-dev/rd-station-api:dev-master
 
 ### Exemplo de uso
 
