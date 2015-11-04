@@ -16,7 +16,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "rdstation": "src/"
+            "rdstation": "src/RdStation"
         }
     }
 }
