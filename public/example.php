@@ -8,7 +8,7 @@
  * 
  */
 
-require '../src/rdstation/api.php';
+require '../src/RdStation/Api.php';
 
 // set email and pass
 $api = New \RdStation\Api('{user@example}', '{pass}');
