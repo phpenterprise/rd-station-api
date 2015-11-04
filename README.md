@@ -7,12 +7,17 @@ API de integração simplificada com a plataforma RD Station
 * Extensões do PHP "php_curl" e "php_openssl"
 * Apache 2.2+
 
+
+### Download via composer   
+
+    composer require phpenterprise-dev/rd-station-api:dev-master
+
 ### Exemplo de uso
 
 ~~~.php
 
 // include lib
-require '../source/rdapi.class.php';
+require '../src/rdstation/api.php';
 
 // authentication (set your RD Station user)
 $api = New \RdStation\Api('{user@example.com}','{pass}');
