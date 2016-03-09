@@ -17,8 +17,8 @@ class Api {
     private $_cookie, $_token;
     protected $curl;
 
-    const RD_URI_LOGIN = 'https://www.rdstation.com.br/login';
-    const RD_URI_LEADS = 'https://www.rdstation.com.br/leads';
+    const RD_URI_LOGIN = 'https://app.rdstation.com.br/login';
+    const RD_URI_LEADS = 'https://app.rdstation.com.br/leads';
     const CURL_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
 
     public function __construct($mail, $pass) {
@@ -57,7 +57,7 @@ class Api {
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
             $c = curl_exec($this->curl);
-
+            
             ob_start();
             $st = @$doc->loadHTML($c, false);
             ob_end_clean();
