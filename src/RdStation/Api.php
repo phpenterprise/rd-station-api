@@ -57,7 +57,7 @@ class Api {
             curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
             $c = curl_exec($this->curl);
-            
+
             ob_start();
             $st = @$doc->loadHTML($c, false);
             ob_end_clean();
@@ -66,9 +66,9 @@ class Api {
             if (!$st) {
                 return 'Api: Parameters of a login page contains incorrect parameters';
             }
-
+            
             // get token
-            $this->_token = $doc->getElementsByTagName('input')->item(1)->getAttribute('value');
+            $this->_token = (is_object($doc)) ? $doc->getElementsByTagName('input')->item(1)->getAttribute('value') : false;
 
             // valid auth token
             if (!$this->_token) {
