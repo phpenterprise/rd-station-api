@@ -64,7 +64,7 @@ class Api {
 
             // valid connection
             if (!$st) {
-                return 'Api: Parameters of a login page contains incorrect parameters';
+                return 'Api: the login page contains incorrect parameters';
             }
             
             // get token
