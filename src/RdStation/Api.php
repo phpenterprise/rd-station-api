@@ -21,7 +21,7 @@ class Api {
     const RD_URI_LEADS = 'https://app.rdstation.com.br/leads';
     const CURL_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
 
-    public function __construct($mail, $pass) {
+    public function __construct($mail, $pass, $ses_key = '') {
 
         // clt session
         session_start();
@@ -29,6 +29,11 @@ class Api {
         // auth params from user 
         $this->mail = $mail;
         $this->pass = $pass;
+
+        // set session key (part of cookie file name)
+        if ($ses_key) {
+            $this->_cookie = $ses_key;
+        }
 
         // set tmp storage
         $this->_cookie_path = __DIR__ . '/../../tmp/';
@@ -48,7 +53,7 @@ class Api {
             $doc->validateOnParse = false;
 
             // set the cookie storage
-            $this->_cookie = tempnam($this->_cookie_path, 'CURLCOOKIE');
+            $this->_cookie = (!$this->_cookie) ? tempnam($this->_cookie_path, 'CURLCOOKIE') : $this->_cookie_path . $this->_cookie;
 
             // call login page
             $this->curl = curl_init();
@@ -66,7 +71,7 @@ class Api {
             if (!$st) {
                 return 'Api: the login page contains incorrect parameters';
             }
-            
+
             // get token
             $this->_token = (is_object($doc)) ? $doc->getElementsByTagName('input')->item(1)->getAttribute('value') : false;
 
@@ -140,6 +145,71 @@ class Api {
         }
     }
 
+    public function exportLeads() {
+
+        // default
+        $data = array();
+
+        // valid session
+        if ($this->getCookieFile()) {
+
+            // refresh last connection (start login)
+            curl_setopt($this->curl, CURLOPT_URL, self::RD_URI_LEADS . '?pagina=1&per_page=500&query=');
+            curl_setopt($this->curl, CURLOPT_USERAGENT, self::CURL_USER_AGENT);
+            curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->_cookie);
+            curl_setopt($this->curl, CURLOPT_VERBOSE, true);
+            curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+            $c = curl_exec($this->curl);
+
+            // valid connection
+            if (!stristr($c, '/logout')) {
+                return 'Api: Page is offline or there was an error in authentication user';
+            }
+
+            preg_match_all("'<a\s+href=\"(\/leads\/[0-9]+)\"[^>]*?>(.*?)</a>'sim", $c, $match);
+
+            // extract leads
+            if (key_exists(1, $match) && is_array($match[1]) && $match[1]) {
+
+                foreach ($match[1] AS $k => $lead) {
+
+                    $code = str_replace('/leads/', '', $lead);
+
+                    // read data
+                    curl_setopt($this->curl, CURLOPT_URL, self::RD_URI_LEADS . '/' . $code);
+                    curl_setopt($this->curl, CURLOPT_USERAGENT, self::CURL_USER_AGENT);
+                    curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->_cookie);
+                    curl_setopt($this->curl, CURLOPT_VERBOSE, true);
+                    curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, 1);
+                    curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+                    $c = curl_exec($this->curl);
+
+                    preg_match("'<a\s+href=\"mailto:[a-zA-Z\-\.0-9]+@[a-zA-Z\-\.0-9]+\"[^>]*?>([\\s\\S]*?)</a>'sim", $c, $match_lead);
+                    preg_match("'\([0-9]{2,3}\)\s+[0-9\-]+'sim", $c, $match_phone);
+                    preg_match("'\<small\>Origem\</small\>\s+<p>(.*?)</p>'sim", $c, $match_origin);
+
+                    // valid data
+                    if (!empty($match[2][$k]) && !empty($match_lead[1]) && filter_var($match_lead[1], FILTER_VALIDATE_EMAIL)) {
+                        $data[$code] = array(
+                            'name' => $match[2][$k],
+                            'mail' => $match_lead[1],
+                            'phone' => (isset($match_phone[0])) ? $match_phone[0] : '',
+                            'origin' => (isset($match_origin[1])) ? $match_origin[1] : ''
+                        );
+                    }
+                }
+            }
+
+            // response (data leads)
+            return (array) $data;
+        } else {
+            return 'Api: The user session expired, attemp new login';
+        }
+    }
+
     private function getCookieFile() {
 
         // set path
@@ -164,7 +234,7 @@ class Api {
         }
 
         // reload cookie
-        if ($latest_filename) {
+        if ($latest_filename && !$this->_cookie) {
             $this->_cookie = $latest_filename;
         }
 
@@ -177,6 +247,15 @@ class Api {
 
         // return status
         return (bool) (($latest_filename) && ($this->curl));
+    }
+
+    public static function logout() {
+        if (isset($_SESSION['_CURL'])) {
+            unset($_SESSION['_CURL']);
+        }
+        
+        // clean cookie in use
+        $this->_cookie = null;
     }
 
 }
