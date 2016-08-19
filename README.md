@@ -33,6 +33,18 @@ var_dump($a);
 
 ~~~
 
+### Instância
+
+* Api (user, pass, session_key)
+
+| Parâmetro     | tipo         |  descrição  |
+| ------------- | ------------- | ------------- |
+| user          | string       | email do usuário RD Station
+| senha         | string       | senha do usuário
+| session_key   | interger     | chave da sessão (opcional)
+
+A chave da sessão possibilida multiplas sessões abertas.
+
 ### Métodos
 
 * API : getMetrics
