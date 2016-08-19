@@ -169,6 +169,13 @@ class Api {
             }
 
             preg_match_all("'<a\s+href=\"(\/leads\/[0-9]+)\"[^>]*?>(.*?)</a>'sim", $c, $match);
+            preg_match_all("'\<small\s+class=\"word-break-word\">.*?</small\>'sim", $c, $match_origin);
+
+            if (!empty($match_origin[0][0])) {
+                $match_origin = array_map(function($a) {
+                    return trim(strip_tags($a), " \n\r\t");
+                }, $match_origin[0]);
+            }
 
             // extract leads
             if (key_exists(1, $match) && is_array($match[1]) && $match[1]) {
@@ -189,7 +196,7 @@ class Api {
 
                     preg_match("'<a\s+href=\"mailto:[a-zA-Z\-\.0-9]+@[a-zA-Z\-\.0-9]+\"[^>]*?>([\\s\\S]*?)</a>'sim", $c, $match_lead);
                     preg_match("'\([0-9]{2,3}\)\s+[0-9\-]+'sim", $c, $match_phone);
-                    preg_match("'\<small\>Origem\</small\>\s+<p>(.*?)</p>'sim", $c, $match_origin);
+                    preg_match("'<p>[A-Z]{2}</p>'sim", $c, $match_uf);
 
                     // valid data
                     if (!empty($match[2][$k]) && !empty($match_lead[1]) && filter_var($match_lead[1], FILTER_VALIDATE_EMAIL)) {
@@ -197,7 +204,8 @@ class Api {
                             'name' => $match[2][$k],
                             'mail' => $match_lead[1],
                             'phone' => (isset($match_phone[0])) ? $match_phone[0] : '',
-                            'origin' => (isset($match_origin[1])) ? $match_origin[1] : ''
+                            'origin' => (isset($match_origin[$k])) ? $match_origin[$k] : 'Cadastro direto',
+                            'uf' => (isset($match_uf[0])) ? trim(strip_tags($match_uf[0]), " \n\r\t") : ''
                         );
                     }
                 }
@@ -236,6 +244,8 @@ class Api {
         // reload cookie
         if ($latest_filename && !$this->_cookie) {
             $this->_cookie = $latest_filename;
+        } else {
+            $latest_filename = $this->_cookie;
         }
 
         // force re-login on loggout
@@ -253,9 +263,6 @@ class Api {
         if (isset($_SESSION['_CURL'])) {
             unset($_SESSION['_CURL']);
         }
-        
-        // clean cookie in use
-        $this->_cookie = null;
     }
 
 }
