@@ -194,7 +194,7 @@ class Api {
                     curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
                     $c = curl_exec($this->curl);
 
-                    preg_match("'<a\s+href=\"mailto:[a-zA-Z\-\.0-9]+@[a-zA-Z\-\.0-9]+\"[^>]*?>([\\s\\S]*?)</a>'sim", $c, $match_lead);
+                    preg_match("'<a\s+href=\"mailto:[a-zA-Z\-\.0-9\_]+@[a-zA-Z\-\.0-9_]+\"[^>]*?>([\\s\\S]*?)</a>'sim", $c, $match_lead);
                     preg_match("'\([0-9]{2,3}\)\s+[0-9\-]+'sim", $c, $match_phone);
                     preg_match("'<p>[A-Z]{2}</p>'sim", $c, $match_uf);
 
