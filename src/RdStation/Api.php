@@ -19,6 +19,7 @@ class Api {
 
     const RD_URI_LOGIN = 'https://app.rdstation.com.br/login';
     const RD_URI_LEADS = 'https://app.rdstation.com.br/leads';
+    const RD_URI_DASH = 'https://app.rdstation.com.br/dashboard/load_dashboard';
     const CURL_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
 
     public function __construct($mail, $pass, $ses_key = '') {
@@ -140,6 +141,33 @@ class Api {
 
             // response (total leads)
             return (int) (preg_replace('/[^0-9]/', '', current($match)));
+        } else {
+            return 'Api: The user session expired, attemp new login';
+        }
+    }
+
+    public function getVisitors() {
+
+        // valid session
+        if ($this->getCookieFile()) {
+
+            // refresh last connection (start login)
+            curl_setopt($this->curl, CURLOPT_URL, self::RD_URI_DASH);
+            curl_setopt($this->curl, CURLOPT_USERAGENT, self::CURL_USER_AGENT);
+            curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->_cookie);
+            curl_setopt($this->curl, CURLOPT_VERBOSE, true);
+            curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+            $c = curl_exec($this->curl);
+
+            // valid connection
+            if (!($c = (array) (json_decode($c)))) {
+                return 'Api: Page is offline or there was an error in authentication user';
+            }
+
+            // response (total visitors)
+            return (int) (($c['visitors']->current_month_value) ? $c['visitors']->current_month_value : 0);
         } else {
             return 'Api: The user session expired, attemp new login';
         }
