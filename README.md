@@ -1,4 +1,4 @@
-# RD Station API for Metrics
+# RD Station API
 API de integração simplificada com a plataforma RD Station
 
 ### Requísitos 
