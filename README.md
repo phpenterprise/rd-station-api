@@ -51,13 +51,17 @@ A chave da sessão possibilida multiplas sessões abertas.
 
   Retorna o total da base de leads
   
-* API : logout
+* API : getVisitors
 
-  Fecha a sessão do usuário
-
+  Retorna o total de visitas no mês
+  
 * API : exportLeads
 
   Exporta todas as leads armazenadas na base
+  
+* API : logout
+
+  Fecha a sessão do usuário
 
 ### Atualização regular.
 
