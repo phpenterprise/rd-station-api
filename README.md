@@ -1,6 +1,8 @@
 # RD Station API
 API de integração simplificada com a plataforma RD Station
 
+[![GPL Licence](https://badges.frapsoft.com/os/gpl/gpl.svg?v=103)](https://opensource.org/licenses/GPL-3.0/) [![PHPPackages Rank](http://phppackages.org/p/smartdealer/sdapi/badge/rank.svg)](http://phppackages.org/p/phpenterprise-dev/rd-station-api) ![](https://reposs.herokuapp.com/?path=phpenterprise-dev/rd-station-api&style=flat)
+
 ### Requísitos 
 
 * PHP 5.3 ou superior
