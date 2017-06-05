@@ -1,5 +1,7 @@
-# RD Station API for Metrics
-API de integração simplificada com a plataforma RD Station
+# RD Station API
+API de integração simplificada com a plataforma RD Station (não oficial)
+
+[![GPL Licence](https://badges.frapsoft.com/os/gpl/gpl.svg?v=103)](https://opensource.org/licenses/GPL-3.0/) [![PHPPackages Rank](http://phppackages.org/p/smartdealer/sdapi/badge/rank.svg)](http://phppackages.org/p/phpenterprise-dev/rd-station-api) ![](https://reposs.herokuapp.com/?path=phpenterprise-dev/rd-station-api&style=flat)
 
 ### Requísitos 
 
@@ -51,13 +53,17 @@ A chave da sessão possibilida multiplas sessões abertas.
 
   Retorna o total da base de leads
   
-* API : logout
+* API : getVisitors
 
-  Fecha a sessão do usuário
-
+  Retorna o total de visitas no mês
+  
 * API : exportLeads
 
   Exporta todas as leads armazenadas na base
+  
+* API : logout
+
+  Fecha a sessão do usuário
 
 ### Atualização regular.
 
