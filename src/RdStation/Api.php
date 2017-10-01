@@ -21,7 +21,8 @@ class Api {
     const RD_URI_LOGIN = 'https://app.rdstation.com.br/login';
     const RD_URI_LEADS = 'https://app.rdstation.com.br/leads';
     const RD_URI_DASH = 'https://app.rdstation.com.br/dashboard/load_dashboard';
-    const RD_PAGER_LIMIT = 10;
+    const RD_PAGER_LIMIT = 25;
+    const RD_PAGER_MAX_PAGE = 400;
     const CURL_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
 
     public function __construct($mail, $pass, $ses_key = '') {
@@ -51,10 +52,13 @@ class Api {
     private function settings() {
 
         // disable time limite
-        set_time_limit(-1);
+        set_time_limit(0);
 
         // increase memory
         ini_set('memory_limit', '512M');
+
+        // debug (function call levels)
+        ini_set('xdebug.max_nesting_level', 500);
     }
 
     public function auth() {
@@ -248,12 +252,14 @@ class Api {
                         );
                     }
                 }
-
-                // next page
-                $this->_page++;
-
                 // read data
-                $this->exportLeads();
+                if ($this->_page < self::RD_PAGER_MAX_PAGE) {
+
+                    // next page
+                    $this->_page++;
+
+                    $this->exportLeads();
+                }
             }
 
             // response (data leads)
