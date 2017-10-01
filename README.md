@@ -61,7 +61,7 @@ A chave da sessão possibilida multiplas sessões na plataforma.
 
   Exporta todas as leads armazenadas na base (array de dados)
       
-  * Parâmetros
+#### Parâmetros
 
 | Posição        | tipo          |  descrição  |
 | -------------  | ------------- | ------------- |
@@ -73,14 +73,14 @@ A chave da sessão possibilida multiplas sessões na plataforma.
 
   Compila os registros exportados em arquivo CSV
   
-  * Campos
+#### Campos
 
 | coluna        | tipo         |  descrição  |
 | ------------- | ------------- | ------------- |
 | name          | string       | nome
 | mail          | string       | email
 | phone         | string       | telefone
-| origin        | string       | tag ou nome do evente
+| origin        | string       | tag ou identificador do evento
 | uf            | string       | estado (ex: SP)
   
 * API : logout
