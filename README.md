@@ -43,9 +43,9 @@ var_dump($a);
 | ------------- | ------------- | ------------- |
 | user          | string       | email do usuário RD Station
 | senha         | string       | senha do usuário
-| session_key   | interger     | chave da sessão (opcional)
+| session_key   | integer      | chave da sessão (opcional)
 
-A chave da sessão possibilida multiplas sessões abertas.
+A chave da sessão possibilida multiplas sessões na plataforma.
 
 ### Métodos
 
@@ -57,9 +57,31 @@ A chave da sessão possibilida multiplas sessões abertas.
 
   Retorna o total de visitas no mês
   
-* API : exportLeads
+* API : exportLeads (query:string)
 
-  Exporta todas as leads armazenadas na base
+  Exporta todas as leads armazenadas na base (array de dados)
+      
+  * Parâmetros
+
+| Posição        | tipo          |  descrição  |
+| -------------  | ------------- | ------------- |
+| 1 (query)      | string        | texto para filtro das leads (opcional)
+  
+  Dependendo da quantidade de leads, este prodecimento poderá levar mais 5 minutos
+
+* API : outputCSV
+
+  Compila os registros exportados em arquivo CSV
+  
+  * Campos
+
+| coluna        | tipo         |  descrição  |
+| ------------- | ------------- | ------------- |
+| name          | string       | nome
+| mail          | string       | email
+| phone         | string       | telefone
+| origin        | string       | tag ou nome do evente
+| uf            | string       | estado (ex: SP)
   
 * API : logout
 
@@ -67,6 +89,6 @@ A chave da sessão possibilida multiplas sessões abertas.
 
 ### Atualização regular.
 
-@Release 1.0
+@Release 1.5
 
 Nota da versão: API Experimental

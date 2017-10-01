@@ -14,18 +14,23 @@ namespace RdStation;
 
 class Api {
 
-    private $_cookie, $_token;
+    public $data = array();
+    private $_cookie, $_token, $_page = 1;
     protected $curl;
 
     const RD_URI_LOGIN = 'https://app.rdstation.com.br/login';
     const RD_URI_LEADS = 'https://app.rdstation.com.br/leads';
     const RD_URI_DASH = 'https://app.rdstation.com.br/dashboard/load_dashboard';
+    const RD_PAGER_LIMIT = 10;
     const CURL_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
 
     public function __construct($mail, $pass, $ses_key = '') {
 
         // clt session
         session_start();
+
+        // load enviroment settings
+        $this->settings();
 
         // auth params from user 
         $this->mail = $mail;
@@ -41,6 +46,15 @@ class Api {
 
         // start login
         return $this->auth();
+    }
+
+    private function settings() {
+
+        // disable time limite
+        set_time_limit(-1);
+
+        // increase memory
+        ini_set('memory_limit', '512M');
     }
 
     public function auth() {
@@ -173,16 +187,13 @@ class Api {
         }
     }
 
-    public function exportLeads() {
-
-        // default
-        $data = array();
+    public function exportLeads($str = '') {
 
         // valid session
         if ($this->getCookieFile()) {
 
             // refresh last connection (start login)
-            curl_setopt($this->curl, CURLOPT_URL, self::RD_URI_LEADS . '?pagina=1&per_page=500&query=');
+            curl_setopt($this->curl, CURLOPT_URL, self::RD_URI_LEADS . '?pagina=' . $this->_page . '&per_page=' . self::RD_PAGER_LIMIT . '&query=' . $str);
             curl_setopt($this->curl, CURLOPT_USERAGENT, self::CURL_USER_AGENT);
             curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->_cookie);
             curl_setopt($this->curl, CURLOPT_VERBOSE, true);
@@ -228,22 +239,78 @@ class Api {
 
                     // valid data
                     if (!empty($match[2][$k]) && !empty($match_lead[1]) && filter_var($match_lead[1], FILTER_VALIDATE_EMAIL)) {
-                        $data[$code] = array(
+                        $this->data [$code] = array(
                             'name' => $match[2][$k],
                             'mail' => $match_lead[1],
-                            'phone' => (isset($match_phone[0])) ? $match_phone[0] : '',
+                            'phone' => (isset($match_phone[0])) ? 'p:' . preg_replace('/[^0-9]+/i', '', $match_phone[0]) : '',
                             'origin' => (isset($match_origin[$k])) ? $match_origin[$k] : 'Cadastro direto',
                             'uf' => (isset($match_uf[0])) ? trim(strip_tags($match_uf[0]), " \n\r\t") : ''
                         );
                     }
                 }
+
+                // next page
+                $this->_page++;
+
+                // read data
+                $this->exportLeads();
             }
 
             // response (data leads)
-            return (array) $data;
+            return (array) $this->data;
         } else {
             return 'Api: The user session expired, attemp new login';
         }
+    }
+
+    public function outputCSV() {
+
+        // read leads
+        $this->data = (empty($this->data)) ? $this->exportLeads() : $this->data;
+
+        // filename
+        $filename = "rdstation-leads-" . date('ymdhms') . ".csv";
+        $filename = trim($filename);
+
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header("Content-Disposition: attachment;filename=$filename");
+
+        $flag = false;
+        $excel_data = '';
+
+        $collumns = ($this->data && ($c = current($this->data))) ? array_keys($c) : array();
+
+        // set memory to default
+        reset($this->data);
+
+        // compile data
+        foreach ($this->data as $row) {
+
+            $row = (array) $row;
+
+            if (!$flag && $collumns) {
+                $excel_data .= implode("\t", $collumns) . "\r\n";
+                $flag = true;
+            }
+
+            array_walk($row, function(&$str) {
+                $str = preg_replace("/\t/", "\\t", $str);
+                $str = preg_replace("/\r?\n/", "\\n", $str);
+                if (strstr($str, '"'))
+                    $str = '"' . str_replace('"', '""', $str) . '"';
+            });
+
+            // send to screen
+            $excel_data .= implode("\t", array_values($row)) . "\r\n";
+        }
+
+        // kill
+        die(chr(255) . chr(254) . mb_convert_encoding($excel_data, 'UTF-16LE', 'UTF-8'));
     }
 
     private function getCookieFile() {
