@@ -89,6 +89,6 @@ A chave da sessão possibilida multiplas sessões na plataforma.
 
 ### Atualização regular.
 
-@Release 1.5
+@Release 1.6.1 (11/2017)
 
 Nota da versão: API Experimental
