@@ -9,8 +9,7 @@
     "license": "GPL2.0",
     "authors": [
         {
-            "name": "Patrick Otto",
-            "email": "patrick@phpenterprise.com"
+            "name": "Patrick Otto"
         }
     ],
     "minimum-stability": "dev",
