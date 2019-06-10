@@ -6,7 +6,7 @@ namespace RdStation;
 
 /*
  * The RD Station Api (for metrics)
- * @author: Patrick Otto <patrick@phpenterprise.com>
+ * @author: Patrick Otto <Php Enterprise>
  * @release: 1.0 beta
  * 
  * For experimental use, rights reserved for Resultados Digitais
